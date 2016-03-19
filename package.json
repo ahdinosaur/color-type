@@ -1,6 +1,6 @@
 {
   "name": "color-type",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "a tcomb type for a color in any space",
   "main": "index.js",
   "scripts": {
