@@ -18,7 +18,32 @@ var colorTypesById = mapValues(
     var colorProperties = fromPairs(color.channel.map((channel, index) => {
       return [channel, Between(color.min[index], color.max[index])]
     }))
-    return BaseColorType.extend(colorProperties, colorAlias)
+
+    var ThisColorType = BaseColorType.extend(colorProperties, colorAlias)
+
+    ThisColorType.prototype.toArray = function toArray () {
+      var array = new Array(color.channel.length)
+      color.channel.forEach((channel, index) => {
+        array[index] = this[channel]
+      }, this)
+      return array
+    }
+
+    ThisColorType.fromArray = function fromArray (array) {
+      var value = { type: colorId }
+      color.channel.forEach((channel, index) => {
+        value[channel] = array[index]
+      }, this)
+      return ColorType(value)
+    }
+
+    ThisColorType.prototype.convert = function convert (toColorId) {
+      const toColorArray = color[toColorId](this.toArray())
+      const ToColorType = colorTypesById[toColorId]
+      return ToColorType.fromArray(toColorArray)
+    }
+
+    return ThisColorType
   }
 )
 
@@ -40,10 +65,10 @@ function Between (min, max) {
   return t.refinement(
     t.Number,
     (n) => n >= min && n <= max,
-    'Between (inclusive)'
+    'Between ' + min + ' and ' + max + ' (inclusive)'
   )
 }
 
-function getColorAlias (color, colorId) {
-  return color.alias != null ? color.alias[0] : colorId
+function getColorAlias (color) {
+  return color.alias != null ? color.alias[0] : color.name
 }
