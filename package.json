@@ -1,0 +1,39 @@
+{
+  "name": "color-type",
+  "version": "1.0.0",
+  "description": "a tcomb type for a color in any space",
+  "main": "index.js",
+  "scripts": {
+    "test": "tape test.js",
+    "demo": "serve-ify ./demo --js.debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahdinosaur/color-type.git"
+  },
+  "keywords": [
+    "color",
+    "type",
+    "color-space"
+  ],
+  "author": "Mikey <michael.williams@enspiral.com> (http://dinosaur.is)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahdinosaur/color-type/issues"
+  },
+  "homepage": "https://github.com/ahdinosaur/color-type#readme",
+  "dependencies": {
+    "color-space": "^1.14.3",
+    "lodash": "^4.6.1",
+    "tcomb": "^3.0.0"
+  },
+  "devDependencies": {
+    "node-dev": "^3.1.0",
+    "r-dom": "^2.1.0",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.7",
+    "serve-ify": "^1.0.3",
+    "tape": "^4.5.1",
+    "tcomb-form": "^0.9.0"
+  }
+}
