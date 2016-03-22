@@ -1,4 +1,3 @@
-
 var t = require('tcomb')
 var colors = require('color-space')
 var mapValues = require('lodash/mapValues')
