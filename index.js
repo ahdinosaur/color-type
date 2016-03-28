@@ -1,74 +1,42 @@
+const vdom = require('virtual-dom')
+const h = require('virtual-dom/h')
+const loop = require('virtual-raf')
+const view = require('tcomb-view')
+const Color = require('../')
 
-var t = require('tcomb')
-var colors = require('color-space')
-var mapValues = require('lodash/mapValues')
-var values = require('lodash/values')
-var fromPairs = require('lodash/fromPairs')
-
-var BaseColorType = t.struct({
-  type: t.maybe(t.enums(
-    mapValues(colors, getColorAlias)
-  ))
-}, 'BaseColorType')
-
-var colorTypesById = mapValues(
-  colors,
-  (color, colorId) => {
-    var colorAlias = getColorAlias(color, colorId)
-    var colorProperties = fromPairs(color.channel.map((channel, index) => {
-      return [channel, Between(color.min[index], color.max[index])]
-    }))
-
-    var ThisColorType = BaseColorType.extend(colorProperties, colorAlias)
-
-    ThisColorType.prototype.toArray = function toArray () {
-      var array = new Array(color.channel.length)
-      color.channel.forEach((channel, index) => {
-        array[index] = this[channel]
-      }, this)
-      return array
+var tree
+const props = {
+  type: Color,
+  value: Color({
+    type: 'rgb',
+    red: 0,
+    green: 0,
+    blue: 0
+  }),
+  onUpdate: function (value) {
+    console.log('value', value)
+    const prevValue = props.value
+    if (value.type !== prevValue.type) {
+      value = prevValue.convert(value.type)
     }
-
-    ThisColorType.fromArray = function fromArray (array) {
-      var value = { type: colorId }
-      color.channel.forEach((channel, index) => {
-        value[channel] = array[index]
-      }, this)
-      return ColorType(value)
-    }
-
-    ThisColorType.prototype.convert = function convert (toColorId) {
-      const toColorArray = color[toColorId](this.toArray())
-      const ToColorType = colorTypesById[toColorId]
-      return ToColorType.fromArray(toColorArray)
-    }
-
-    return ThisColorType
-  }
-)
-
-var ColorType = t.union(
-  values(colorTypesById),
-  'ColorType'
-)
-
-ColorType.dispatch = function dispatchColorType (colorType) {
-  if (colorType == null || colorType.type == null) {
-    return BaseColorType
-  }
-  return colorTypesById[colorType.type]
+    tree.update(
+      Object.assign(props, { value })
+    )
+    styleColor(value)
+  },
 }
+tree = loop(props, view(h), vdom)
 
-module.exports = ColorType
+document.querySelector('main').appendChild(tree.render())
 
-function Between (min, max) {
-  return t.refinement(
-    t.Number,
-    (n) => n >= min && n <= max,
-    'Between ' + min + ' and ' + max + ' (inclusive)'
-  )
-}
-
-function getColorAlias (color) {
-  return color.alias != null ? color.alias[0] : color.name
+function styleColor (color) {
+  const rgb = color.convert('rgb')
+  const colorString = [
+    'rgb(',
+    Math.round(rgb.red) + ',',
+    Math.round(rgb.green) + ',',
+    Math.round(rgb.blue),
+    ')'
+  ].join('')
+  document.body.style.backgroundColor = colorString
 }
