@@ -1,23 +1,23 @@
-var t = require('tcomb')
-var refineNumberInRange = require('t-range')
-var colors = require('color-space')
-var mapValues = require('lodash/mapValues')
-var values = require('lodash/values')
-var fromPairs = require('lodash/fromPairs')
+const t = require('tcomb')
+const refineNumberInRange = require('t-range')
+const colors = require('color-space')
+const mapValues = require('lodash/mapValues')
+const values = require('lodash/values')
+const fromPairs = require('lodash/fromPairs')
 
-var STEP = 0.01
+const STEP = 0.01
 
-var BaseColor = t.struct({
+const BaseColor = t.struct({
   type: t.maybe(t.enums(
     mapValues(colors, getColorAlias)
   ))
 }, 'BaseColor')
 
-var colorTypesById = mapValues(
+const colorTypesById = mapValues(
   colors,
   (color, colorId) => {
-    var colorAlias = getColorAlias(color, colorId)
-    var colorProperties = fromPairs(color.channel.map((channel, index) => {
+    const colorAlias = getColorAlias(color, colorId)
+    const colorProperties = fromPairs(color.channel.map((channel, index) => {
       return [
         channel,
         refineNumberInRange({
@@ -28,10 +28,10 @@ var colorTypesById = mapValues(
       ]
     }))
 
-    var ThisColor = BaseColor.extend(colorProperties, colorAlias)
+    const ThisColor = BaseColor.extend(colorProperties, colorAlias)
 
     ThisColor.prototype.toArray = function toArray () {
-      var array = new Array(color.channel.length)
+      const array = new Array(color.channel.length)
       color.channel.forEach((channel, index) => {
         array[index] = this[channel]
       }, this)
@@ -39,7 +39,7 @@ var colorTypesById = mapValues(
     }
 
     ThisColor.fromArray = function fromArray (array) {
-      var value = { type: colorId }
+      const value = { type: colorId }
       color.channel.forEach((channel, index) => {
         value[channel] = array[index]
       }, this)
@@ -47,8 +47,8 @@ var colorTypesById = mapValues(
     }
 
     ThisColor.prototype.convert = function convert (toColorId) {
-      var toColorArray = color[toColorId](this.toArray())
-      var ToColor = colorTypesById[toColorId]
+      const toColorArray = color[toColorId](this.toArray())
+      const ToColor = colorTypesById[toColorId]
       return ToColor.fromArray(toColorArray)
     }
 
@@ -56,7 +56,7 @@ var colorTypesById = mapValues(
   }
 )
 
-var Color = t.union(
+const Color = t.union(
   values(colorTypesById),
   'Color'
 )

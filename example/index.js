@@ -1,11 +1,11 @@
-var vdom = require('virtual-dom')
-var h = require('virtual-dom/h')
-var loop = require('virtual-raf')
-var view = require('tcomb-view')
-var Color = require('../')
+const vdom = require('virtual-dom')
+const h = require('virtual-dom/h')
+const loop = require('virtual-raf')
+const view = require('tcomb-view')
+const Color = require('../')
 
 var tree
-var props = {
+const props = {
   type: Color,
   value: Color({
     type: 'rgb',
@@ -15,12 +15,12 @@ var props = {
   }),
   onUpdate: function (value) {
     console.log('value', value)
-    var prevValue = props.value
+    const prevValue = props.value
     if (value.type !== prevValue.type) {
       value = prevValue.convert(value.type)
     }
     tree.update(
-      Object.assign(props, { value: value })
+      Object.assign(props, { value })
     )
     styleColor(value)
   },
