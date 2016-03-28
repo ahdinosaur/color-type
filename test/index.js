@@ -1,12 +1,17 @@
-var test = require('tape')
-var forEach = require('lodash/forEach')
-var colorTypes = require('./')
+const test = require('tape')
+const forEach = require('lodash/forEach')
+const Color = require('../')
+
+describe('t-color', function(t) {
+  t.ok(Color, 'module is require-able')
+  t.end()
+})
 
 test('describes color types', function (t) {
-  t.equal(colorTypes.meta.kind, 'union')
-  t.equal(typeof colorTypes.meta.name, 'string')
+  t.equal(Color.meta.kind, 'union')
+  t.equal(typeof Color.meta.name, 'string')
 
-  forEach(colorTypes.meta.map, (color) => {
+  forEach(Color.meta.map, (color) => {
     t.equal(color.meta.kind, 'struct')
     t.equal(typeof color.meta.name, 'string')
     
