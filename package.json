@@ -58,7 +58,10 @@
     "babelify": "^7.2.0",
     "color-space": "^1.14.3",
     "lodash": "^4.6.1",
+    "ndpixels": "^1.0.1",
     "t-range": "^2.0.0",
-    "tcomb": "^3.0.0"
+    "tcomb": "^3.0.0",
+    "tcomb-view": "^4.1.2",
+    "virtual-canvas": "^1.1.1"
   }
 }

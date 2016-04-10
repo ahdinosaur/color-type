@@ -22,21 +22,8 @@ const props = {
     tree.update(
       Object.assign(props, { value })
     )
-    styleColor(value)
   },
 }
 tree = loop(props, view(h), vdom)
 
 document.querySelector('main').appendChild(tree.render())
-
-function styleColor (color) {
-  const rgb = color.convert('rgb')
-  const colorString = [
-    'rgb(',
-    Math.round(rgb.red) + ',',
-    Math.round(rgb.green) + ',',
-    Math.round(rgb.blue),
-    ')'
-  ].join('')
-  document.body.style.backgroundColor = colorString
-}
